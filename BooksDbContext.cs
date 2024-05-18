@@ -10,6 +10,8 @@ namespace Books
         public DbSet<Shelf> Shelves { get; set;}
         public DbSet<Review> Reviews { get; set;}
 
+        public DbSet<Author> Authors { get; set;}
+
         public BooksDbContext(DbContextOptions<BooksDbContext> context) : base(context) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,7 +23,7 @@ namespace Books
 
             modelBuilder.Entity<Book>().HasData(new Book[]
             {
-                new Book { Id = 1, Title = "A Room with a View", Summary = "Lucy is a well-mannered Edwardian lady who finds that true love has no interest in playing by her rules. But how can she choose between what she wants and what everyone around her expects her to want? This gentle but sharp comedy has it all: surprise encounters, jealousy and revenge, conventional fools and unconventional sages, confrontation, loss, and eventual triumph.", NumberOfPages = 172, PubDate = new DateTime(2011, 11, 1)  }
+                new Book { Id = 1, Title = "A Room with a View", Summary = "Lucy is a well-mannered Edwardian lady who finds that true love has no interest in playing by her rules. But how can she choose between what she wants and what everyone around her expects her to want? This gentle but sharp comedy has it all: surprise encounters, jealousy and revenge, conventional fools and unconventional sages, confrontation, loss, and eventual triumph.", NumberOfPages = 172, PubDate = new DateTime(2011, 11, 1), ImageUrl = "https://upload.wikimedia.org/wikipedia/en/8/8e/A_Room_with_a_View.jpg"  }
             });
 
             modelBuilder.Entity<Author>().HasData(new Author[]

@@ -10,6 +10,8 @@ namespace Books
         public DbSet<Shelf> Shelves { get; set;}
         public DbSet<Review> Reviews { get; set;}
 
+        public DbSet<Author> Authors { get; set;}
+
         public BooksDbContext(DbContextOptions<BooksDbContext> context) : base(context) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

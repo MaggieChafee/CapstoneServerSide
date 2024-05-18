@@ -21,7 +21,7 @@ namespace Books.Controllers
             app.MapGet("/books/recent-releases", (BooksDbContext db) =>
             {
                 var recentReleases = db.Books
-                    .OrderBy(b => b.PubDate)
+                    .OrderByDescending(b => b.PubDate)
                     .Take(25)
                     .ToList();
                 if (recentReleases == null)
@@ -29,6 +29,30 @@ namespace Books.Controllers
                     return Results.BadRequest();
                 }
                 return Results.Ok(recentReleases);
+            });
+
+            app.MapGet("/books/{bookId}", (BooksDbContext db, int bookId) =>
+            {
+                
+                var singleBook = db.Books
+                    .Include(b => b.Authors)
+                    .Where(b => b.Id == bookId)
+                    .Select(b => new
+                    {
+                        b.Id, 
+                        b.Title,
+                        b.Summary,
+                        b.NumberOfPages,
+                        publicationDate = b.PubDate.ToString("mm/dd/yyyy"),
+                        b.ImageUrl,
+                    })
+                    .FirstOrDefault();
+
+                if (singleBook == null)
+                {
+                    return Results.BadRequest();
+                }
+                return Results.Ok(singleBook);
             });
         }
     }

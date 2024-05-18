@@ -9,8 +9,48 @@ namespace Books.Controllers
     {
         public static void Map(WebApplication app)
         {
-            app.MapGet("", () => {
+            // get reviews for a single book
+            app.MapGet("/books/{bookId}/reviews", (BooksDbContext db, int bookId) => 
+            {
+                var bookReviews = db.Reviews
+                    .Where(r => r.BookId == bookId)
+                    .Select(r => new
+                    {
+                        r.Id,
+                        r.Rating,
+                        reviewDate = r.DateCreated.ToString("mm/dd/yyyy"),
+                        r.Comment,
+                        userName = r.User.Username,
+                    })
+                    .ToList();
 
+                if (bookReviews == null)
+                {
+                    return Results.Empty;
+                }
+                return Results.Ok(bookReviews);
+            });
+
+            // if the user has reviewed a book, get that review
+            app.MapGet("/books/{bookId}/userReview/{userId}", (BooksDbContext db, int bookId, int userId) =>
+            {
+                var singleReview = db.Reviews
+                    .Where(r => r.BookId == bookId && r.UserId == userId)
+                    .Select(r => new
+                    {
+                        r.Id,
+                        r.Rating,
+                        reviewDate = r.DateCreated.ToString("mm/dd/yyyy"),
+                        r.Comment,
+                        userName = r.User.Username,
+                    })
+                    .FirstOrDefault();
+
+                if (singleReview == null)
+                {
+                    return Results.Empty;
+                }
+                return Results.Ok(singleReview);
             });
         }
     }

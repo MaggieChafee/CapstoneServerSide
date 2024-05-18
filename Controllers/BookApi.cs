@@ -33,18 +33,20 @@ namespace Books.Controllers
 
             app.MapGet("/books/{bookId}", (BooksDbContext db, int bookId) =>
             {
-                
                 var singleBook = db.Books
-                    .Include(b => b.Authors)
                     .Where(b => b.Id == bookId)
+                    .Include(b => b.Authors)
                     .Select(b => new
                     {
-                        b.Id, 
+                        b.Id,
                         b.Title,
                         b.Summary,
                         b.NumberOfPages,
                         publicationDate = b.PubDate.ToString("mm/dd/yyyy"),
                         b.ImageUrl,
+                        authorInformation = b.Authors
+                            .Select(a => new { a.Id, a.FirstName, a.LastName })
+                            .ToList(),
                     })
                     .FirstOrDefault();
 

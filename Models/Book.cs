@@ -9,6 +9,6 @@
         public required string ImageUrl {  get; set; }
         public DateTime PubDate { get; set; }
         public ICollection<Shelf>? Shelf { get; set; }
-        public ICollection<Author>? Authors { get;}
+        public ICollection<Author>? Authors { get; set; }
     }
 }

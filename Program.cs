@@ -49,6 +49,7 @@ app.UseHttpsRedirection();
 
 UserApi.Map(app);
 BookApi.Map(app);
+ReviewApi.Map(app);
 
 
 app.Run();

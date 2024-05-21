@@ -52,6 +52,32 @@ namespace Books.Controllers
                 }
                 return Results.Ok(singleReview);
             });
+
+            // get user's reviews
+            app.MapGet("/reviews/user/{userId}", (BooksDbContext db, int userId) =>
+            {
+                var usersReviews = db.Reviews
+                    .Where(r => r.UserId == userId)
+                    .Select( r => new
+                    {
+                        r.Id,
+                        r.UserId,
+                        r.BookId,
+                        r.DateCreated,
+                        r.Rating,
+                        userName = r.User.Username,
+                        r.Comment,
+                        bookTitle = r.Book.Title,
+                    })
+                    .OrderByDescending(r => r.DateCreated)
+                    .ToList();
+
+                if (usersReviews == null)
+                {
+                    return Results.Empty;
+                }
+                return Results.Ok(usersReviews);
+            });
         }
     }
 }

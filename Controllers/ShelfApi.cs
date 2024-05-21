@@ -67,17 +67,21 @@ namespace Books.Controllers
                 return Results.Ok();    
             });
 
-            // update shelf book is on
-            app.MapPut("/shelves/change-shelf", (BooksDbContext db, BookShelfDto dto) =>
-            {
-                var book = db.Books
-                    .Include(b => b.Shelf)
-                    .FirstOrDefault(b => b.Id == dto.BookId);
-                var newShelf = db.Shelves
-                    .Include(s => s.Books)
-                    .FirstOrDefault(s => s.Id == dto.ShelfId);
-            });
             // delete book from shelf 
+            app.MapDelete("shelves/{shelfId}/delete-from-shelf/{bookId}", (BooksDbContext db, int shelfId, int bookId) =>
+            {
+                var shelf = db.Shelves
+                    .Include(s => s.Books)
+                    .FirstOrDefault(s => s.Id == shelfId);
+                var deleteBook = db.Books.FirstOrDefault(b => b.Id == bookId);
+                if (shelf == null || deleteBook == null)
+                {
+                    return Results.BadRequest();
+                }
+                shelf.Books.Remove(deleteBook); 
+                db.SaveChanges();
+                return Results.Ok();
+            });
         }
     }
 }

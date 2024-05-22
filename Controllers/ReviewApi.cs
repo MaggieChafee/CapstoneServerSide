@@ -109,7 +109,7 @@ namespace Books.Controllers
                 {
                     return Results.BadRequest();
                 }
-                reviewToUpdate.Id = dto.Id;
+
                 reviewToUpdate.Comment = dto.Comment;
                 reviewToUpdate.DateCreated = dto.DateCreated;
                 reviewToUpdate.Rating = dto.Rating;

@@ -9,19 +9,26 @@ namespace Books.Controllers
 {
     public class ShelfApi
     {
-        // get a user's shelves
+        
         public static void Map(WebApplication app)
         {
-            /* app.MapGet("/shelves/user/{userId}", (BooksDbContext db, int userId) => 
+            // get a user's shelves
+            app.MapGet("/shelves/user/{userId}", (BooksDbContext db, int userId) => 
             {
                 var userShelves = db.Shelves
                     .Include(s => s.BookShelves)
+                    .ThenInclude(s => s.Book)
                     .Where(s => s.UserId == userId)
                     .Select(s => new
                     {
                         s.Id,
                         s.Name,
-                        bookInformation = 
+                        bookInformation = s.BookShelves.Select(s => new 
+                        {  
+                           s.Id, 
+                           s.Book.Title,
+                           s.Book.ImageUrl
+                        })
                     })
                     .ToList();
 
@@ -31,7 +38,7 @@ namespace Books.Controllers
                 }
                 return Results.Ok(userShelves);
             });
-            */
+            
             // create a new shelf 
             app.MapPost("/shelves", (BooksDbContext db, CreateShelfDto dto) =>
             {
@@ -46,11 +53,12 @@ namespace Books.Controllers
                 return Results.Created($"/shelves/{newShelf.Id}", newShelf);
             });
 
-            /* // get shelf details
+            // get shelf details
             app.MapGet("/shelves/{shelfId}", (BooksDbContext db, int shelfId) =>
             {
                 var singleShelf = db.Shelves
-                .Include(s => s.Books)
+                .Include(s => s.BookShelves)
+                .ThenInclude(s => s.Book)
                 .Where(s => s.Id == shelfId)
                 .FirstOrDefault();
 
@@ -60,33 +68,53 @@ namespace Books.Controllers
                 }
                 return Results.Ok(singleShelf);
             });
-            */
+            
             // add book to shelf
-            app.MapPost("/shelves/add-to-shelf", (BooksDbContext db, BookShelfDto dto) =>
+            app.MapPost("/bookshelves", (BooksDbContext db, BookShelfDto dto) =>
             {
-                var shelf = db.Shelves
-                    .FirstOrDefault(s => s.Id == dto.ShelfId);
-                if (shelf == null)
+                var newBookShelf = new BookShelf()
+                {
+                    BookId = dto.BookId,
+                    Book = db.Books.FirstOrDefault(b => b.Id == dto.BookId),
+                    ShelfId = dto.ShelfId,
+                    Shelf = db.Shelves.FirstOrDefault(s => s.Id == dto.ShelfId)
+                };
+
+                if (newBookShelf == null)
                 {
                     return Results.BadRequest();
                 }
-
+                db.BookShelves.Add(newBookShelf);
                 db.SaveChanges();
                 return Results.Ok();    
             });
 
             // delete book from shelf 
-            app.MapDelete("shelves/{shelfId}/delete-from-shelf/{bookId}", (BooksDbContext db, int shelfId, int bookId) =>
+            app.MapDelete("bookshelves/{bookShelfId}", (BooksDbContext db, int bookShelfId) =>
             {
-                var shelf = db.Shelves
-                    .FirstOrDefault(s => s.Id == shelfId);
-                var deleteBook = db.Books.FirstOrDefault(b => b.Id == bookId);
-                if (shelf == null || deleteBook == null)
+                var bookShelfToDelete = db.BookShelves.FirstOrDefault(bs => bs.Id == bookShelfId);
+
+                if (bookShelfToDelete == null)
                 {
                     return Results.BadRequest();
                 }
+                db.BookShelves.Remove(bookShelfToDelete);
                 db.SaveChanges();
                 return Results.Ok();
+            });
+
+            // update shelf book is on
+            app.MapPut("/bookshelves/{bookShelfId}", (BooksDbContext db, int bookShelfId, BookShelfDto dto) =>
+            {
+                var bookShelfToUpdate = db.BookShelves.FirstOrDefault(bs => bs.Id == bookShelfId);
+                if (bookShelfToUpdate == null)
+                {
+                    return Results.BadRequest();
+                }
+                bookShelfToUpdate.ShelfId = dto.ShelfId;
+                bookShelfToUpdate.Shelf = db.Shelves.FirstOrDefault(s => s.Id == dto.ShelfId);
+                db.SaveChanges();
+                return Results.Ok("Book successfully moved to new shelf");
             });
         }
     }

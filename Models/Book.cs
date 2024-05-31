@@ -8,7 +8,7 @@
         public int NumberOfPages { get; set; }
         public required string ImageUrl {  get; set; }
         public DateTime PubDate { get; set; }
-        public ICollection<Shelf>? Shelf { get; set; }
+        public List<BookShelf>? BookShelves { get; set; }
         public ICollection<Author>? Authors { get; set; }
     }
 }

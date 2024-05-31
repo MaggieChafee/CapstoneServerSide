@@ -12,6 +12,8 @@ namespace Books
 
         public DbSet<Author> Authors { get; set;}
 
+        public DbSet<BookShelf> BookShelves { get; set;}
+
         public BooksDbContext(DbContextOptions<BooksDbContext> context) : base(context) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

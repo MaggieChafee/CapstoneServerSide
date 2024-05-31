@@ -21,9 +21,11 @@ namespace Books.Controllers
                     {
                         r.Id,
                         r.Rating,
-                        reviewDate = r.DateCreated.ToString("mm/dd/yyyy"),
+                        reviewDate = r.DateCreated.ToString("M/d/yyyy"),
                         r.Comment,
                         userName = r.User.Username,
+                        r.BookId,
+                        r.UserId
                     })
                     .ToList();
 
@@ -43,9 +45,11 @@ namespace Books.Controllers
                     {
                         r.Id,
                         r.Rating,
-                        reviewDate = r.DateCreated.ToString("mm/dd/yyyy"),
+                        reviewDate = r.DateCreated.ToString("M/d/yyyy"),
                         r.Comment,
                         userName = r.User.Username,
+                        r.BookId,
+                        r.UserId
                     })
                     .FirstOrDefault();
 

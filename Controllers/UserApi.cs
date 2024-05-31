@@ -16,7 +16,7 @@ namespace Books.Controllers
 
                 if (singleUser == null)
                 {
-                    return Results.BadRequest();
+                    return Results.NotFound();
                 }
 
                 return Results.Ok(singleUser);

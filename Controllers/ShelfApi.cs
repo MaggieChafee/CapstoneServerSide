@@ -17,6 +17,17 @@ namespace Books.Controllers
                 var userShelves = db.Shelves
                     .Include(s => s.Books)
                     .Where(s => s.UserId == userId)
+                    .Select(s => new
+                    {
+                        s.Id,
+                        s.Name,
+                        bookInformation = s.Books.Select(b => new
+                        {
+                            b.Id,
+                            b.Title,
+                            b.ImageUrl
+                        })
+                    })
                     .ToList();
 
                 if (userShelves == null)

@@ -86,7 +86,7 @@ namespace Books.Controllers
                 }
                 db.BookShelves.Add(newBookShelf);
                 db.SaveChanges();
-                return Results.Ok();    
+                return Results.Created();    
             });
 
             // delete book from shelf 

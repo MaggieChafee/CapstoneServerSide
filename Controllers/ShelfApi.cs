@@ -26,6 +26,7 @@ namespace Books.Controllers
                         bookInformation = s.BookShelves.Select(s => new 
                         {  
                            s.Id, 
+                           s.BookId,
                            s.Book.Title,
                            s.Book.ImageUrl
                         })

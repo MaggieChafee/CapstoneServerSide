@@ -3,6 +3,7 @@ using Books.Controllers;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Books.Models;
+using Books.DTOs;
 
 namespace Books.Controllers
 {
@@ -38,6 +39,40 @@ namespace Books.Controllers
             app.MapPost("/users", (BooksDbContext db, User newUser) =>
             {
                 db.Users.Add(newUser);
+                db.SaveChanges();
+
+                return Results.Created($"/users/{newUser.Id}", newUser);
+            });
+
+            // create user and shelves
+            app.MapPost("/users-and-shelves", (BooksDbContext db, User newUser) =>
+            {
+                db.Users.Add(newUser);
+                db.SaveChanges();
+                Shelf favorites = new Shelf()
+                {
+                    Name = "Favorites",
+                    UserId = newUser.Id,
+                };
+                Shelf currentlyReading = new Shelf()
+                {
+                    Name = "Currently Reading",
+                    UserId = newUser.Id,
+                };
+                Shelf wantToRead = new Shelf()
+                {
+                    Name = "Want To Read",
+                    UserId = newUser.Id,
+                };
+                Shelf read = new Shelf()
+                {
+                    Name = "Read",
+                    UserId = newUser.Id,
+                };
+                db.Shelves.Add(favorites);
+                db.Shelves.Add(currentlyReading);
+                db.Shelves.Add(wantToRead);
+                db.Shelves.Add(read);
                 db.SaveChanges();
 
                 return Results.Created($"/users/{newUser.Id}", newUser);

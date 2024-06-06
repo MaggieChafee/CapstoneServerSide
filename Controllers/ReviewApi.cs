@@ -61,7 +61,7 @@ namespace Books.Controllers
             });
 
             // get user's reviews
-            app.MapGet("/reviews/user/{userId}", (BooksDbContext db, int userId) =>
+            app.MapGet("reviews/user/{userId}", (BooksDbContext db, int userId) =>
             {
                 var usersReviews = db.Reviews
                     .Where(r => r.UserId == userId)

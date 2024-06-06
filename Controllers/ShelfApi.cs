@@ -23,13 +23,13 @@ namespace Books.Controllers
                     {
                         s.Id,
                         s.Name,
-                        bookInformation = s.BookShelves.Select(s => new 
-                        {  
-                           s.Id, 
-                           s.BookId,
-                           s.Book.Title,
-                           s.Book.ImageUrl
-                        })
+                        bookInformation = s.BookShelves.Select(s => new
+                        {
+                            s.Id,
+                            s.BookId,
+                            bookTitle = s.Book.Title,
+                            bookImage = s.Book.ImageUrl
+                        }).Take(4)
                     })
                     .ToList();
 

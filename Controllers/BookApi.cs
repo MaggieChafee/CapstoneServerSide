@@ -56,6 +56,22 @@ namespace Books.Controllers
                 }
                 return Results.Ok(singleBook);
             });
+
+            // get books by shelfId
+            app.MapGet("/shelves/{shelfId}/books", (BooksDbContext db, int shelfId) =>
+            {
+                var books = db.BookShelves
+                    .Where(x => x.ShelfId == shelfId)
+                    .Select(b => b.Book)
+                    .ToList();
+
+                if (books == null)
+                {
+                    return Results.Empty;
+                }
+
+                return Results.Ok(books);
+            });
         }
     }
 }

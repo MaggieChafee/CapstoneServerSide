@@ -72,6 +72,24 @@ namespace Books.Controllers
 
                 return Results.Ok(books);
             });
+
+            // get a book's average rating
+            app.MapGet("/books/{bookId}/average-rating", (BooksDbContext db, int bookId) =>
+            {
+
+                var ratings = db.Reviews
+                    .Where(r => r.BookId == bookId)
+                    .Select(r => r.Rating)
+                    .ToList();
+
+                if (!ratings.Any())
+                {
+                    return Results.Ok(0);
+                }
+
+                var averageRating = ratings.Average();
+                return Results.Ok(averageRating);
+            });
         }
     }
 }

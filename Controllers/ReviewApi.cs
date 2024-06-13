@@ -55,7 +55,7 @@ namespace Books.Controllers
 
                 if (singleReview == null)
                 {
-                    return Results.Empty;
+                    return Results.Json(new { });
                 }
                 return Results.Ok(singleReview);
             });
@@ -135,6 +135,19 @@ namespace Books.Controllers
                 db.SaveChanges();
 
                 return Results.Ok();
+            });
+
+            // get a single review
+            app.MapGet("/reviews/{reviewId}", (BooksDbContext db, int reviewId) =>
+            {
+                var singleReview = db.Reviews.FirstOrDefault(r => r.Id == reviewId);
+                if (singleReview == null)
+                {
+                    return Results.BadRequest();
+                }
+
+                return Results.Ok(singleReview);
+
             });
         }
     }

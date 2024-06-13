@@ -117,6 +117,36 @@ namespace Books.Controllers
                 db.SaveChanges();
                 return Results.Ok("Book successfully moved to new shelf");
             });
+
+            // get shelf book is on
+            app.MapGet("/books/{bookId}/shelves/{userId}", (BooksDbContext db, int bookId, int userId) =>
+            {
+                var shelfCheck = db.Shelves
+                    .Include(s => s.BookShelves)
+                    .Where(s => s.UserId == userId)
+                    .Where(b => b.BookShelves.Any(b => b.BookId == bookId))
+                    .FirstOrDefault();
+
+                if (shelfCheck == null)
+                {
+                    return Results.Json(new { });
+                }
+                
+                return Results.Ok(shelfCheck);
+
+            });
+
+            // get bookshelf based on bookId and userId
+            app.MapGet("/books/{bookId}/bookshelves/{shelfId}", (BooksDbContext db, int bookId, int shelfId) =>
+            {
+                var bookShelf = db.BookShelves.FirstOrDefault(b => b.BookId == bookId && b.ShelfId == shelfId);
+                if (bookShelf == null)
+                {
+                    return Results.Json(new { });
+                }
+
+                return Results.Ok(bookShelf);
+            });
         }
     }
 }

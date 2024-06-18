@@ -42,7 +42,7 @@ namespace Books.Controllers
                         b.Title,
                         b.Summary,
                         b.NumberOfPages,
-                        publicationDate = b.PubDate.ToString("mm/dd/yyyy"),
+                        publicationDate = b.PubDate.ToString("MM/dd/yyyy"),
                         b.ImageUrl,
                         authorInformation = b.Authors
                             .Select(a => new { a.Id, a.FirstName, a.LastName })

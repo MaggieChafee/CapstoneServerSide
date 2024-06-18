@@ -21,7 +21,7 @@ namespace Books.Controllers
                     {
                         r.Id,
                         r.Rating,
-                        reviewDate = r.DateCreated.ToString("M/d/yyyy"),
+                        DateCreated = r.DateCreated.ToString("M/d/yyyy"),
                         r.Comment,
                         userName = r.User.Username,
                         r.BookId,
@@ -45,7 +45,7 @@ namespace Books.Controllers
                     {
                         r.Id,
                         r.Rating,
-                        reviewDate = r.DateCreated.ToString("M/d/yyyy"),
+                        DateCreated = r.DateCreated.ToString("M/d/yyyy"),
                         r.Comment,
                         userName = r.User.Username,
                         r.BookId,
@@ -65,18 +65,18 @@ namespace Books.Controllers
             {
                 var usersReviews = db.Reviews
                     .Where(r => r.UserId == userId)
+                    .OrderByDescending(r => r.DateCreated)
                     .Select( r => new
                     {
                         r.Id,
                         r.UserId,
                         r.BookId,
-                        r.DateCreated,
+                        DateCreated = r.DateCreated.ToString("M/d/yyyy"),
                         r.Rating,
                         userName = r.User.Username,
                         r.Comment,
                         bookTitle = r.Book.Title,
                     })
-                    .OrderByDescending(r => r.DateCreated)
                     .ToList();
 
                 if (usersReviews == null)

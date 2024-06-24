@@ -51,5 +51,6 @@ UserApi.Map(app);
 BookApi.Map(app);
 ReviewApi.Map(app);
 ShelfApi.Map(app);
+SearchApi.Map(app);
 
 app.Run();

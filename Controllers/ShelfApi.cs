@@ -9,11 +9,11 @@ namespace Books.Controllers
 {
     public class ShelfApi
     {
-        
+
         public static void Map(WebApplication app)
         {
             // get a user's shelves
-            app.MapGet("/shelves/user/{userId}", (BooksDbContext db, int userId) => 
+            app.MapGet("/shelves/user/{userId}", (BooksDbContext db, int userId) =>
             {
                 var userShelves = db.Shelves
                     .Include(s => s.BookShelves)
@@ -39,7 +39,7 @@ namespace Books.Controllers
                 }
                 return Results.Ok(userShelves);
             });
-            
+
             // create a new shelf 
             app.MapPost("/shelves", (BooksDbContext db, CreateShelfDto dto) =>
             {
@@ -69,7 +69,7 @@ namespace Books.Controllers
                 }
                 return Results.Ok(singleShelf);
             });
-            
+
             // add book to shelf
             app.MapPost("/bookshelves", (BooksDbContext db, BookShelfDto dto) =>
             {
@@ -87,7 +87,7 @@ namespace Books.Controllers
                 }
                 db.BookShelves.Add(newBookShelf);
                 db.SaveChanges();
-                return Results.Created();    
+                return Results.Created();
             });
 
             // delete book from shelf 
@@ -131,7 +131,7 @@ namespace Books.Controllers
                 {
                     return Results.Json(new { });
                 }
-                
+
                 return Results.Ok(shelfCheck);
 
             });
